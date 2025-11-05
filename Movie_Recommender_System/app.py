@@ -5,10 +5,10 @@ import boto3
 import os
 
 
-BUCKET_NAME = "cloudbucket100io"
+BUCKET_NAME = os.environ.get("S3_BUCKET")
+REGION_NAME = os.environ.get("S3_REGION")
 MOVIES_FILE = "movies.pkl"
 SIMILARITY_FILE = "similarity.pkl"
-REGION_NAME = "ap-south-1"
 
 s3 = boto3.client('s3', region_name=REGION_NAME)
 
@@ -70,5 +70,6 @@ if st.button("Recommend"):
                 col.image(poster_url)
             else:
                 col.write("Poster not available.")
+
 
 
