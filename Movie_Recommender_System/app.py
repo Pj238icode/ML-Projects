@@ -56,7 +56,7 @@ st.title("🎬 Movie Recommender System")
 movie_name = st.selectbox("Select a movie:", movies_df['title'].values)
 
 if st.button("Recommend"):
-    api_key = '72a89250'
+    api_key = os.environ.get("OMDB_API_KEY")
     recommended_movies = recommend(movie_name, api_key)
 
     st.success(f"Recommendations for **{movie_name}**:")
@@ -70,4 +70,5 @@ if st.button("Recommend"):
                 col.image(poster_url)
             else:
                 col.write("Poster not available.")
+
 
