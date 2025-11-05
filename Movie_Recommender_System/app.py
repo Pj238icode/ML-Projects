@@ -4,16 +4,15 @@ import requests
 import boto3
 import os
 
-# AWS S3 bucket info
+
 BUCKET_NAME = "cloudbucket100io"
 MOVIES_FILE = "movies.pkl"
 SIMILARITY_FILE = "similarity.pkl"
-REGION_NAME = "ap-south-1"  # your bucket region
+REGION_NAME = "ap-south-1"
 
-# Initialize S3 client (no credentials if public bucket; else use access keys)
 s3 = boto3.client('s3', region_name=REGION_NAME)
 
-# Function to download file from S3 if not exists locally
+
 def download_from_s3(filename):
     if not os.path.exists(filename):
         s3.download_file(BUCKET_NAME, filename, filename)
@@ -71,3 +70,4 @@ if st.button("Recommend"):
                 col.image(poster_url)
             else:
                 col.write("Poster not available.")
+
