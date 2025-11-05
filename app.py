@@ -10,6 +10,13 @@ MOVIES_URL = os.environ.get("MOVIES_URL")
 SIMILARITY_URL = os.environ.get("SIMILARITY_URL")
 OMDB_API_KEY = os.environ.get("OMDB_API_KEY")
 
+
+
+st.write("MOVIES_URL:", MOVIES_URL)
+st.write("SIMILARITY_URL:", SIMILARITY_URL)
+st.write("OMDB_API_KEY:", OMDB_API_KEY)
+
+
 MOVIES_FILE = "movies.pkl"
 SIMILARITY_FILE = "similarity.pkl"
 
@@ -81,3 +88,4 @@ if st.button("Recommend"):
                 col.image(poster_url)
             else:
                 col.write("Poster not available.")
+
