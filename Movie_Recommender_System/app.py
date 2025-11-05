@@ -1,10 +1,30 @@
 import streamlit as st
 import pickle
 import requests
+import boto3
+import os
 
-# Load movie data and similarity matrix
-movies_df = pickle.load(open('movies.pkl', 'rb'))
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+# AWS S3 bucket info
+BUCKET_NAME = "cloudbucket100io"
+MOVIES_FILE = "movies.pkl"
+SIMILARITY_FILE = "similarity.pkl"
+REGION_NAME = "ap-south-1"  # your bucket region
+
+# Initialize S3 client (no credentials if public bucket; else use access keys)
+s3 = boto3.client('s3', region_name=REGION_NAME)
+
+# Function to download file from S3 if not exists locally
+def download_from_s3(filename):
+    if not os.path.exists(filename):
+        s3.download_file(BUCKET_NAME, filename, filename)
+
+# Download files
+download_from_s3(MOVIES_FILE)
+download_from_s3(SIMILARITY_FILE)
+
+# Load pickle files
+movies_df = pickle.load(open(MOVIES_FILE, 'rb'))
+similarity = pickle.load(open(SIMILARITY_FILE, 'rb'))
 
 
 # Function to fetch poster URL
@@ -22,7 +42,6 @@ def recommend(movie_name, api_key):
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
 
     recommended_movies = []
-    recommended_posters = []
 
     for i in movie_list:
         movie_title = movies_df.iloc[i[0]].title
@@ -43,7 +62,7 @@ if st.button("Recommend"):
 
     st.success(f"Recommendations for **{movie_name}**:")
 
-    cols = st.columns(5)  # 5 recommendations in a row
+    cols = st.columns(5)
     for idx, col in enumerate(cols):
         if idx < len(recommended_movies):
             movie_title, poster_url = recommended_movies[idx]
