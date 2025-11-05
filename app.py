@@ -10,11 +10,11 @@ REGION_NAME = os.environ.get("S3_REGION")
 MOVIES_FILE = "movies.pkl"
 SIMILARITY_FILE = "similarity.pkl"
 
+MOVIES_KEY = "uploads/movies.pkl"
+SIMILARITY_KEY = "uploads/similarity.pkl"
 
-st.write("AWS_ACCESS_KEY_ID exists:", os.environ.get("AWS_ACCESS_KEY_ID") is not None)
-st.write("AWS_SECRET_ACCESS_KEY exists:", os.environ.get("AWS_SECRET_ACCESS_KEY") is not None)
-st.write("OMDB_API_KEY exists:", os.environ.get("OMDB_API_KEY") is not None)
-st.write("S3_REGION exists:", os.environ.get("S3_REGION"))
+
+
 
 # S3 client with credentials
 s3 = boto3.client(
@@ -29,8 +29,8 @@ def download_from_s3(filename):
     if not os.path.exists(filename):
         s3.download_file(BUCKET_NAME, filename, filename)
 
-download_from_s3(MOVIES_FILE)
-download_from_s3(SIMILARITY_FILE)
+download_from_s3(MOVIES_FILE, MOVIES_KEY)
+download_from_s3(SIMILARITY_FILE, SIMILARITY_KEY)
 
 # Load pickle files
 movies_df = pickle.load(open(MOVIES_FILE, 'rb'))
@@ -75,4 +75,5 @@ if st.button("Recommend"):
                 col.image(poster_url)
             else:
                 col.write("Poster not available.")
+
 
